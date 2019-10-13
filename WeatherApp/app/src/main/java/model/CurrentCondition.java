@@ -5,7 +5,7 @@ public class CurrentCondition {
     private String condition;
     private String description;
     private String icon;
-    private float pressure;
+    private double pressure;
     private float humidity;
     private float maxTemp;
     private float minTemp;
@@ -43,12 +43,12 @@ public class CurrentCondition {
         this.icon = icon;
     }
 
-    public float getPressure() {
+    public double getPressure() {
         return pressure;
     }
 
     public void setPressure(float pressure) {
-        this.pressure = pressure;
+        this.pressure = pressure / 1.3332239;
     }
 
     public float getHumidity() {

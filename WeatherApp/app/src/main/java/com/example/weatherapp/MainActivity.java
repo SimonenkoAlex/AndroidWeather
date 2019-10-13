@@ -1,25 +1,41 @@
 package com.example.weatherapp;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import data.CityPreference;
 import data.JSONWeatherParser;
 import data.WeatherHttpClient;
 import model.Weather;
@@ -57,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         sunset = (TextView) findViewById(R.id.setText);
         updated = (TextView) findViewById(R.id.updateText);
 
-        renderWeatherData("Moscow,RU");
+        CityPreference cityPreference = new CityPreference(MainActivity.this);
+        renderWeatherData(cityPreference.getCity());
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +91,44 @@ public class MainActivity extends AppCompatActivity {
         weatherTask.execute(new String[]{city + "&units=metric&APPID=ae00dc4b6dd00a9863e5e712e68387bf"});
     }
 
+    private class DownloadImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            iconView.setImageBitmap(bitmap);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            return downloadImage(strings[0]);
+        }
+
+        private Bitmap downloadImage (String code) {
+            final DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet getRequest = new HttpGet(Util.Utils.ICON_URL + code + ".png");
+            //HttpGet getRequest = new HttpGet(Util.Utils.ICON_URL + "04d.png");
+            //final HttpGet getRequest = new HttpGet("https://www.clipartmax.com/png/full/156-1563320_local-grocery-store-comments-cart-icon-png.png");
+            try {
+                HttpResponse response = client.execute(getRequest);
+                final int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode != HttpStatus.SC_OK) {
+                    Log.v("DownloadImage ", "Error: " + statusCode);
+                    return null;
+                }
+                final HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    InputStream inputStream = null;
+                    inputStream = entity.getContent();
+                    // decode contents from the stream
+                    final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    return bitmap;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     private class WeatherTask extends AsyncTask<String, Void, Weather> {
         @Override
         protected void onPostExecute(Weather weather) {
@@ -86,26 +141,49 @@ public class MainActivity extends AppCompatActivity {
 
             DecimalFormat decimalFormat = new DecimalFormat("#.#");
             String tempFormat = decimalFormat.format(weather.currentCondition.getTemperature());
+            String pressureFormat = decimalFormat.format(weather.currentCondition.getPressure());
 
             cityName.setText(weather.place.getCity() + "," + weather.place.getCountry());
             temp.setText("" + tempFormat + " ⁰C");
-            humidity.setText("Humidity: " + weather.currentCondition.getHumidity() + " %");
-            pressure.setText("Pressure: " + weather.currentCondition.getPressure() + " hPa");
-            wind.setText("Wind: " + weather.wind.getSpeed() + " m/s");
-            sunrise.setText("Sunrise: " + sunriseDate);
-            sunset.setText("Sunset: " + sunsetDate);
-            updated.setText("Last Updated: " + updateDate);
-            description.setText("Condition: " + weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescription() + ")");
+            humidity.setText("Влажность: " + weather.currentCondition.getHumidity() + " %");
+            pressure.setText("Давление: " + pressureFormat + " мм. рт. ст.");
+            wind.setText("Скорость ветра: " + weather.wind.getSpeed() + " м/с");
+            sunrise.setText("Восход: " + sunriseDate);
+            sunset.setText("Закат: " + sunsetDate);
+            updated.setText("Обновленно: " + updateDate);
+            description.setText("Состояние: " + weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescription() + ")");
 
         }
 
+        @SuppressLint("WrongThread")
         @Override
         protected Weather doInBackground(String... strings) {
             String data = ((new WeatherHttpClient()).getWeatherData(strings[0]));
             weather = JSONWeatherParser.getWeather(data);
+            weather.iconData = weather.currentCondition.getIcon();
             Log.v("Data: ", weather.place.getCity());
+            new DownloadImageAsyncTask().execute(weather.iconData);
             return weather;
         }
+    }
+
+    private void showInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Change City");
+        final EditText cityInput = new EditText(MainActivity.this);
+        cityInput.setInputType(InputType.TYPE_CLASS_TEXT);
+        cityInput.setHint("Portland,US");
+        builder.setView(cityInput);
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CityPreference cityPreference = new CityPreference(MainActivity.this);
+                cityPreference.setCity(cityInput.getText().toString());
+                String newCity = cityPreference.getCity();
+                renderWeatherData(newCity);
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -124,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.change_cityId) {
-            return true;
+            showInputDialog();
         }
 
         return super.onOptionsItemSelected(item);

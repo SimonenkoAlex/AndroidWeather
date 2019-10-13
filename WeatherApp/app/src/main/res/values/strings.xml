@@ -1,4 +1,13 @@
 <resources>
-    <string name="app_name">WeatherApp</string>
-    <string name="change_city">Change City</string>
+    <string name="app_name">Погода</string>
+    <string name="change_city">Выбор города</string>
+    <string name="wind">Ветер</string>
+    <string name="cloud">Состояние</string>
+    <string name="pressure">Давление</string>
+    <string name="humidity">Влажность</string>
+    <string name="sunrise">Восход</string>
+    <string name="sunset">Закат</string>
+    <string name="last_updated">обновление</string>
+    <string name="city">город</string>
+    <string name="temp">#.# ⁰C</string>
 </resources>
