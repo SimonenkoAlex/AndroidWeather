@@ -69,23 +69,8 @@ public class MainActivity extends AppCompatActivity {
     GPSTracker gps;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        cityName = (TextView) findViewById(R.id.cityText);
-        iconView = (ImageView) findViewById(R.id.thumbnailIcon);
-        temp = (TextView) findViewById(R.id.tempText);
-        description = (TextView) findViewById(R.id.cloudText);
-        humidity = (TextView) findViewById(R.id.humidText);
-        pressure = (TextView) findViewById(R.id.pressureText);
-        wind = (TextView) findViewById(R.id.windText);
-        sunrise = (TextView) findViewById(R.id.riseText);
-        sunset = (TextView) findViewById(R.id.setText);
-        updated = (TextView) findViewById(R.id.updateText);
-
+    protected void onStart() {
+        super.onStart();
         // вызов разрешения на использование геолокации
         if (isReadPermissionGranted()) {
             // Create class object
@@ -109,6 +94,28 @@ public class MainActivity extends AppCompatActivity {
             CityPreference cityPreference = new CityPreference(MainActivity.this);
             renderWeatherData(cityPreference.getCity(), newUnits);
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        cityName = (TextView) findViewById(R.id.cityText);
+        iconView = (ImageView) findViewById(R.id.thumbnailIcon);
+        temp = (TextView) findViewById(R.id.tempText);
+        description = (TextView) findViewById(R.id.cloudText);
+        humidity = (TextView) findViewById(R.id.humidText);
+        pressure = (TextView) findViewById(R.id.pressureText);
+        wind = (TextView) findViewById(R.id.windText);
+        sunrise = (TextView) findViewById(R.id.riseText);
+        sunset = (TextView) findViewById(R.id.setText);
+        updated = (TextView) findViewById(R.id.updateText);
+
+        //CityPreference cityPreference = new CityPreference(MainActivity.this);
+        //renderWeatherData(cityPreference.getCity(), newUnits);
     }
 
     // мы можем также дать другой Permission
@@ -234,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
             weather = JSONWeatherParser.getWeather(data);
             weather.iconData = weather.currentCondition.getIcon();
             Log.v("Data: ", weather.place.getCity());
-            new DownloadImageAsyncTask().execute(weather.iconData);
+            new DownloadImageAsyncTask().execute(new String [] { weather.iconData});
             return weather;
         }
     }
