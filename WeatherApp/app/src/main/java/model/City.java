@@ -5,7 +5,7 @@ public class City {
     private String name;
     private int avgTemp;
 
-    City(long id, String name, int avgTemp){
+    public City(long id, String name, int avgTemp){
         this.id = id;
         this.name = name;
         this.avgTemp = avgTemp;

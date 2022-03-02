@@ -34,16 +34,16 @@ public class DatabaseAdapter {
     }
 
     public List<City> getCities(){
-        ArrayList<City> users = new ArrayList<>();
+        ArrayList<City> cities = new ArrayList<>();
         Cursor cursor = getAllEntries();
         while (cursor.moveToNext()){
             int id = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ID));
             String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
-            int year = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_TEMP));
-            users.add(new City(id, name, year));
+            int avgTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_TEMP));
+            cities.add(new City(id, name, avgTemp));
         }
         cursor.close();
-        return  users;
+        return  cities;
     }
 
     public long getCount(){
@@ -51,16 +51,16 @@ public class DatabaseAdapter {
     }
 
     public City getCity(long id){
-        City user = null;
+        City city = null;
         String query = String.format("SELECT * FROM %s WHERE %s=?",DatabaseHelper.TABLE, DatabaseHelper.COLUMN_ID);
         Cursor cursor = database.rawQuery(query, new String[]{ String.valueOf(id)});
         if(cursor.moveToFirst()){
             String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
-            int year = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_TEMP));
-            user = new City(id, name, year);
+            int avgTemp = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_TEMP));
+            city = new City(id, name, avgTemp);
         }
         cursor.close();
-        return  user;
+        return  city;
     }
 
     public long insert(City city){
