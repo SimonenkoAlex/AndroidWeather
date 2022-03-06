@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,10 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.util.Log;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +40,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -210,23 +214,10 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.menu_moscow: cityPreference.setCity("Москва"); break;
-            case R.id.menu_saint_petersburg: cityPreference.setCity("Санкт-Петербург"); break;
-            case R.id.menu_novosibirsk: cityPreference.setCity("Новосибирск"); break;
-            case R.id.menu_samara: cityPreference.setCity("Самара"); break;
-            case R.id.menu_kazan: cityPreference.setCity("Казань"); break;
-            case R.id.Rostov_on_Don: cityPreference.setCity("Ростов-на-Дону"); break;
-            case R.id.menu_omsk: cityPreference.setCity("Омск"); break;
-            case R.id.menu_ufa: cityPreference.setCity("Уфа"); break;
-            case R.id.menu_volgograd: cityPreference.setCity("Волгоград"); break;
-            case R.id.Permian: cityPreference.setCity("Пермь"); break;
-            case R.id.Krasnoyarsk: cityPreference.setCity("Красноярск"); break;
-            case R.id.Saratov: cityPreference.setCity("Саратов"); break;
-            case R.id.Voronezh: cityPreference.setCity("Воронеж"); break;
-            case R.id.Krasnodar: cityPreference.setCity("Краснодар"); break;
-        }
-        if (id == R.id.action_settings) {
-            showInputDialog();
+            case R.id.action_units: showInputDialog(); break;
+            case R.id.action_settings: startActivity(new Intent(this, SettingsActivity.class)); break;
+            case R.id.russian_local: item.setChecked(true); break;
+            case R.id.english_local: item.setChecked(true); break;
         }
         String newCity = cityPreference.getCity();
         renderWeatherData(newCity, newUnits);
