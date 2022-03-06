@@ -24,12 +24,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_NAME
                 + " TEXT, " + COLUMN_TEMP + " INTEGER);");
         // добавление начальных данных
-        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
-                + ", " + COLUMN_TEMP  + ") VALUES ('Омск', 0);");
+        fillDatabase(db);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion,  int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+TABLE);
         onCreate(db);
+    }
+
+    private void fillDatabase(SQLiteDatabase db) {
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Омск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Москва', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Санкт-Петербург', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Калининград', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Бийск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Барнаул', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Иркутск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Томск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Новосибирск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Пермь', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Челябинск', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Екатеринбург', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Сочи', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Владивосток', 0);");
+        db.execSQL("INSERT INTO "+ TABLE +" (" + COLUMN_NAME
+                + ", " + COLUMN_TEMP  + ") VALUES ('Красноярск', 0);");
     }
 }

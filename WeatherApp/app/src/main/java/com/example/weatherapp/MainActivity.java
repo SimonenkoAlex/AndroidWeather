@@ -95,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
         updated = (TextView) findViewById(R.id.updateText);
 
         CityPreference cityPreference = new CityPreference(MainActivity.this);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            cityPreference.setCity(extras.getString("name"));
+        }
+
         renderWeatherData(cityPreference.getCity(), newUnits);
     }
 
@@ -210,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        CityPreference cityPreference = new CityPreference(MainActivity.this);
 
         //noinspection SimplifiableIfStatement
         switch (id) {
@@ -219,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.russian_local: item.setChecked(true); break;
             case R.id.english_local: item.setChecked(true); break;
         }
-        String newCity = cityPreference.getCity();
-        renderWeatherData(newCity, newUnits);
+
         return super.onOptionsItemSelected(item);
     }
 }
