@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/toolbar"
         android:text="@string/city"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="30sp"
         android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:text="@string/temp"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="70sp"
         android:textStyle="normal" />
 
@@ -53,7 +53,7 @@
         android:layout_below="@+id/thumbnailIcon"
         android:layout_marginTop="35dp"
         android:text="@string/wind"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -63,7 +63,7 @@
         android:layout_below="@+id/windText"
         android:layout_marginTop="5dp"
         android:text="@string/cloud"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -73,7 +73,7 @@
         android:layout_below="@+id/cloudText"
         android:layout_marginTop="5dp"
         android:text="@string/pressure"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -83,7 +83,7 @@
         android:layout_below="@+id/pressureText"
         android:layout_marginTop="5dp"
         android:text="@string/humidity"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -93,7 +93,7 @@
         android:layout_below="@+id/humidText"
         android:layout_marginTop="5dp"
         android:text="@string/sunrise"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -103,7 +103,7 @@
         android:layout_below="@+id/riseText"
         android:layout_marginTop="5dp"
         android:text="@string/sunset"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="26sp" />
 
     <TextView
@@ -114,7 +114,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:text="@string/last_updated"
-        android:textColor="#fff"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="16sp" />
 
 </RelativeLayout>

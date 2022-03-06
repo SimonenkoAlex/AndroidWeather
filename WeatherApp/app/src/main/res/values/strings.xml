@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Погода</string>
     <string name="action_settings">Настройки</string>
-    <string name="change_city">Выбор города</string>
+    <string name="change_localization">Выбор локализации</string>
+    <string name="russian">русская</string>
+    <string name="english">английская</string>
     <string name="wind">Ветер</string>
     <string name="cloud">Состояние</string>
     <string name="pressure">Давление</string>
@@ -11,11 +13,10 @@
     <string name="last_updated">Обновление</string>
     <string name="city">Город</string>
     <string name="temp">#.# ⁰C</string>
+    <string name="change_city">Выбор города</string>
+    <string name="units">Единицы измерения</string>
+    <string name="temperature">Температура: </string>
 
-    <string name="weather_sunny">&#xf00d;</string>
-    <string name="weather_clear_night">&#xf02e;</string>
-
-    <string name="weather_foggy">&#xf014;</string>
     <string name="weather_cloudy">&#xf013;</string>
     <string name="weather_rainy">&#xf019;</string>
     <string name="weather_snowy">&#xf01b;</string>
