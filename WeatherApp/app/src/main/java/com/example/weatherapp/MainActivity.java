@@ -48,6 +48,7 @@ import java.util.Date;
 import data.CityPreference;
 import data.GPSTracker;
 import data.JSONWeatherParser;
+import data.TemperaturePreference;
 import data.WeatherHttpClient;
 import model.Weather;
 
@@ -71,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
     //private LocationManager locationManager;
     //String longitude = new String();
     //String latitude = new String();
-
-    private String newUnits = "metric";
+    TemperaturePreference tempPref;
+    CityPreference cityPreference;
     Weather weather = new Weather();
     //GPSTracker gps;
 
@@ -94,13 +95,15 @@ public class MainActivity extends AppCompatActivity {
         sunset = (TextView) findViewById(R.id.setText);
         updated = (TextView) findViewById(R.id.updateText);
 
-        CityPreference cityPreference = new CityPreference(MainActivity.this);
+        cityPreference = new CityPreference(MainActivity.this);
+        tempPref = new TemperaturePreference(MainActivity.this);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             cityPreference.setCity(extras.getString("name"));
+            tempPref.setTemperatureUnits(extras.getString("temp"));
         }
 
-        renderWeatherData(cityPreference.getCity(), newUnits);
+        renderWeatherData(cityPreference.getCity(), tempPref.getTemperatureUnits());
     }
 
     public void renderWeatherData (String city, String units) {
@@ -153,10 +156,12 @@ public class MainActivity extends AppCompatActivity {
             String pressureFormat = decimalFormat.format(weather.currentCondition.getPressure());
 
             cityName.setText(weather.place.getCity());
-            if (newUnits == "metric")
+            if (tempPref.getTemperatureUnits() == "metric")
                 temp.setText("" + tempFormat + " ⁰C");
-            if (newUnits == "imperial")
+            if (tempPref.getTemperatureUnits() == "imperial")
                 temp.setText("" + tempFormat + " F");
+            if (tempPref.getTemperatureUnits() == "standard")
+                temp.setText("" + tempFormat + " K");
             humidity.setText("Влажность: " + weather.currentCondition.getHumidity() + " %");
             pressure.setText("Давление: " + pressureFormat + " мм. рт. ст.");
             wind.setText("Скорость ветра: " + weather.wind.getSpeed() + " м/с");
@@ -166,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             description.setText("Состояние: " + weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescription() + ")");
         }
 
-        //@SuppressLint("WrongThread")
+        @SuppressLint("WrongThread")
         @Override
         protected Weather doInBackground(String... strings) {
             String data = ((new WeatherHttpClient()).getWeatherData(strings[0]));
@@ -183,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
     private void showInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Единицы измерения").setCancelable(true);
-        final String[] chooseUnits = { "⁰C", "F" };
+        final String[] chooseUnits = { "⁰C", "F", "K" };
         // добавляем одну кнопку для закрытия диалога
-        builder.setNeutralButton("Отмена", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton("Подтвердить", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -194,9 +199,11 @@ public class MainActivity extends AppCompatActivity {
         .setSingleChoiceItems(chooseUnits, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (chooseUnits[which] == "⁰C") newUnits = "metric";
-                if (chooseUnits[which] == "F") newUnits = "imperial";
-                renderWeatherData(cityName.getText().toString(), newUnits);
+                Bundle extras = getIntent().getExtras();
+                if (chooseUnits[which] == "⁰C") tempPref.setTemperatureUnits("metric");
+                if (chooseUnits[which] == "F") tempPref.setTemperatureUnits("imperial");
+                if (chooseUnits[which] == "K") tempPref.setTemperatureUnits("standard");
+                renderWeatherData(cityName.getText().toString(), tempPref.getTemperatureUnits());
             }
         });
         builder.show();
