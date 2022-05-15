@@ -11,7 +11,7 @@ public class TemperaturePreference {
     }
 
     public String getTemperatureUnits() {
-        return prefs.getString("temp", "standard");
+        return prefs.getString("temp", "metric");
     }
 
     public void setTemperatureUnits(String tempUnits){

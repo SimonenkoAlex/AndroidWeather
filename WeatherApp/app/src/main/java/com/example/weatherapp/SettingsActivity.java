@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,11 +22,9 @@ import java.util.List;
 import data.CityPreference;
 import model.City;
 
-public class SettingsActivity extends AppCompatActivity {
-    private DatabaseHelper sqlHelper;
-    private SQLiteDatabase db;
-    private Cursor cityCursor;
-    private SimpleCursorAdapter cityAdapter;
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
+    private String newCity;
+    private String newUnits;
     private ArrayAdapter<City> arrayAdapter;
     private ListView cityList;
     private EditText cityFilter;
@@ -40,16 +39,17 @@ public class SettingsActivity extends AppCompatActivity {
         cityFilter = (EditText)findViewById(R.id.cityFilter);
         listUnits = (Spinner) findViewById(R.id.spinTemp);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         cityList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 City city = arrayAdapter.getItem(position);
                 if(city != null) {
                     // переход к главной activity
-
-                    intent.putExtra("name", city.getName());
-                    startActivity(intent);
+                    newCity = city.getName();
+                    Log.v("New City: ", newCity);
+                    //intent.putExtra("name", city.getName());
+                    //startActivity(intent);
                 }
             }
         });
@@ -80,10 +80,11 @@ public class SettingsActivity extends AppCompatActivity {
                 // Получаем выбранный объект
                 String item = (String)parent.getItemAtPosition(position);
                 if(item != null) {
-                    if (item == "⁰C") item = "metric";
-                    if (item == "F") item = "imperial";
-                    if (item == "K") item = "standard";
-                    intent.putExtra("temp", item);
+                    if (item == "⁰C") newUnits = "metric";
+                    if (item == "F") newUnits = "imperial";
+                    if (item == "K") newUnits = "standard";
+                    Log.v("New Unit: ", newUnits + " " + item);
+                    //intent.putExtra("temp", newUnits);
                     //startActivity(intent);
                 }
             }
@@ -93,6 +94,16 @@ public class SettingsActivity extends AppCompatActivity {
             }
         };
         listUnits.setOnItemSelectedListener(itemSelectedListener);
+
+        findViewById(R.id.a_counter_back).setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("temp", newUnits);
+        intent.putExtra("name", newCity);
+        startActivity(intent);
     }
 
     @Override
@@ -106,5 +117,10 @@ public class SettingsActivity extends AppCompatActivity {
         arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, cities);
         cityList.setAdapter(arrayAdapter);
         adapter.close();
+
+        Intent intent = getIntent();
+
+        newUnits = intent.getStringExtra("temp");
+        newCity = intent.getStringExtra("name");
     }
 }

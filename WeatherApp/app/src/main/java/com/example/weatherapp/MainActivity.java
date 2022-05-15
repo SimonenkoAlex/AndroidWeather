@@ -3,9 +3,11 @@ package com.example.weatherapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -44,6 +46,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import data.CityPreference;
 import data.GPSTracker;
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
     // тег для определения главного окна приложения
     private  static final String TAG = "Main";
 
+    private String newCity;
+    private String newUnits;
     //private LocationManager locationManager;
     //String longitude = new String();
     //String latitude = new String();
@@ -84,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Locale locale = new Locale("ru");
+        Locale.setDefault(locale);
+        Configuration configuration = new Configuration();
+        configuration.locale = locale;
+        getBaseContext().getResources().updateConfiguration(configuration, null);
+
         cityName = (TextView) findViewById(R.id.cityText);
         iconView = (ImageView) findViewById(R.id.thumbnailIcon);
         temp = (TextView) findViewById(R.id.tempText);
@@ -97,10 +108,28 @@ public class MainActivity extends AppCompatActivity {
 
         cityPreference = new CityPreference(MainActivity.this);
         tempPref = new TemperaturePreference(MainActivity.this);
+
+        newUnits = tempPref.getTemperatureUnits();
+        newCity = cityPreference.getCity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             cityPreference.setCity(extras.getString("name"));
             tempPref.setTemperatureUnits(extras.getString("temp"));
+        }
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            newCity = intent.getStringExtra("name");
+            newUnits = intent.getStringExtra("temp");
+
+            cityPreference.setCity(newCity);
+            tempPref.setTemperatureUnits(newUnits);
         }
 
         renderWeatherData(cityPreference.getCity(), tempPref.getTemperatureUnits());
@@ -156,19 +185,19 @@ public class MainActivity extends AppCompatActivity {
             String pressureFormat = decimalFormat.format(weather.currentCondition.getPressure());
 
             cityName.setText(weather.place.getCity());
-            if (tempPref.getTemperatureUnits() == "metric")
-                temp.setText("" + tempFormat + " ⁰C");
-            if (tempPref.getTemperatureUnits() == "imperial")
-                temp.setText("" + tempFormat + " F");
-            if (tempPref.getTemperatureUnits() == "standard")
-                temp.setText("" + tempFormat + " K");
-            humidity.setText("Влажность: " + weather.currentCondition.getHumidity() + " %");
-            pressure.setText("Давление: " + pressureFormat + " мм. рт. ст.");
-            wind.setText("Скорость ветра: " + weather.wind.getSpeed() + " м/с");
-            sunrise.setText("Восход: " + sunriseDate);
-            sunset.setText("Закат: " + sunsetDate);
-            updated.setText("Обновленно: " + updateDate);
-            description.setText("Состояние: " + weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescription() + ")");
+            //if (tempPref.getTemperatureUnits() == "metric")
+                temp.setText("" + tempFormat + " ");
+            //if (tempPref.getTemperatureUnits() == "imperial")
+            //     temp.setText("" + tempFormat + " F");
+            //if (tempPref.getTemperatureUnits() == "standard")
+            //    temp.setText("" + tempFormat + " K");
+            humidity.setText(getString(R.string.humidity) + ": " + weather.currentCondition.getHumidity() + " %");
+            pressure.setText(getString(R.string.pressure) + ": " + pressureFormat + " " + getString(R.string.pressure_units));
+            wind.setText(getString(R.string.wind_speed) + ": " + weather.wind.getSpeed() + " " + getString(R.string.wind_speed_units));
+            sunrise.setText(getString(R.string.sunrise) + ": " + sunriseDate);
+            sunset.setText(getString(R.string.sunset) + ": " + sunsetDate);
+            updated.setText(getString(R.string.last_updated) + ": " + updateDate);
+            description.setText(getString(R.string.cloud) + ": " + weather.currentCondition.getCondition() + "(" + weather.currentCondition.getDescription() + ")");
         }
 
         @SuppressLint("WrongThread")
@@ -177,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
             String data = ((new WeatherHttpClient()).getWeatherData(strings[0]));
             weather = JSONWeatherParser.getWeather(data);
             weather.iconData = weather.currentCondition.getIcon();
-            Log.v("Data: ", weather.place.getCity() + weather.iconData);
+            Log.v("Data: ", weather.place.getCity() + " " + weather.iconData);
 
             new DownloadImageTask(iconView).execute(ICON_URL + weather.iconData);
 
@@ -187,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void showInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Единицы измерения").setCancelable(true);
+        builder.setTitle(R.string.units).setCancelable(true);
         final String[] chooseUnits = { "⁰C", "F", "K" };
         // добавляем одну кнопку для закрытия диалога
-        builder.setNeutralButton("Подтвердить", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(R.string.confirm, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -203,7 +232,8 @@ public class MainActivity extends AppCompatActivity {
                 if (chooseUnits[which] == "⁰C") tempPref.setTemperatureUnits("metric");
                 if (chooseUnits[which] == "F") tempPref.setTemperatureUnits("imperial");
                 if (chooseUnits[which] == "K") tempPref.setTemperatureUnits("standard");
-                renderWeatherData(cityName.getText().toString(), tempPref.getTemperatureUnits());
+                newUnits = tempPref.getTemperatureUnits();
+                renderWeatherData(cityName.getText().toString(), newUnits);
             }
         });
         builder.show();
@@ -226,9 +256,28 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_units: showInputDialog(); break;
-            case R.id.action_settings: startActivity(new Intent(this, SettingsActivity.class)); break;
-            case R.id.russian_local: item.setChecked(true); break;
-            case R.id.english_local: item.setChecked(true); break;
+            case R.id.action_settings: {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                intent.putExtra("temp", newUnits);
+                intent.putExtra("name", newCity);
+                startActivity(intent);
+            } break;
+            case R.id.russian_local: {
+                item.setChecked(true);
+                Locale locale = new Locale("ru");
+                Locale.setDefault(locale);
+                Configuration configuration = new Configuration();
+                configuration.locale = locale;
+                getBaseContext().getResources().updateConfiguration(configuration, null);
+            } break;
+            case R.id.english_local: {
+                item.setChecked(true);
+                Locale locale = new Locale("en");
+                Locale.setDefault(locale);
+                Configuration configuration = new Configuration();
+                configuration.locale = locale;
+                getBaseContext().getResources().updateConfiguration(configuration, null);
+            } break;
         }
 
         return super.onOptionsItemSelected(item);

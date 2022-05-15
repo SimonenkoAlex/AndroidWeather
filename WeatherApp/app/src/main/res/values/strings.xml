@@ -1,25 +1,23 @@
 <resources>
-    <string name="app_name">Погода</string>
-    <string name="action_settings">Настройки</string>
-    <string name="change_localization">Выбор локализации</string>
-    <string name="russian">русская</string>
-    <string name="english">английская</string>
-    <string name="wind">Ветер</string>
-    <string name="cloud">Состояние</string>
-    <string name="pressure">Давление</string>
-    <string name="humidity">Влажность</string>
-    <string name="sunrise">Восход</string>
-    <string name="sunset">Закат</string>
-    <string name="last_updated">Обновление</string>
-    <string name="city">Город</string>
+    <string name="app_name">Weather</string>
+    <string name="action_settings">Options</string>
+    <string name="change_localization">Localization choice</string>
+    <string name="russian">russian</string>
+    <string name="english">english</string>
+    <string name="wind">The wind</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="wind_speed_units">mph</string>
+    <string name="cloud">Condition</string>
+    <string name="pressure">Pressure</string>
+    <string name="pressure_units">Pascal</string>
+    <string name="humidity">Humidity</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="city">City</string>
     <string name="temp">#.# ⁰C</string>
-    <string name="change_city">Выбор города</string>
-    <string name="units">Единицы измерения</string>
-    <string name="temperature">Температура: </string>
-
-    <string name="weather_cloudy">&#xf013;</string>
-    <string name="weather_rainy">&#xf019;</string>
-    <string name="weather_snowy">&#xf01b;</string>
-    <string name="weather_thunder">&#xf01e;</string>
-    <string name="weather_drizzle">&#xf01c;</string>
+    <string name="change_city">Choice of city</string>
+    <string name="units">Units of measurement</string>
+    <string name="temperature">Temperature: </string>
+    <string name="confirm">Confirm</string>
 </resources>

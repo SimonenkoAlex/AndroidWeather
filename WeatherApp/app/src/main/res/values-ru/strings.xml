@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="action_settings">Настройки</string>
+    <string name="change_localization">Выбор локализации</string>
+    <string name="russian">русская</string>
+    <string name="english">английская</string>
+    <string name="wind">Ветер</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="wind_speed_units">м/с</string>
+    <string name="cloud">Состояние</string>
+    <string name="pressure">Давление</string>
+    <string name="pressure_units">мм. рт. ст.</string>
+    <string name="humidity">Влажность</string>
+    <string name="sunrise">Восход</string>
+    <string name="sunset">Закат</string>
+    <string name="last_updated">Обновление</string>
+    <string name="city">Город</string>
+    <string name="temp">#.# ⁰C</string>
+    <string name="change_city">Выбор города</string>
+    <string name="units">Единицы измерения</string>
+    <string name="temperature">Температура: </string>
+    <string name="confirm">Подтвердить</string>
+</resources>
